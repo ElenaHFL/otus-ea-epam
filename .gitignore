@@ -1,0 +1,20 @@
+### Maven
+target/
+
+### Intellij
+.idea/
+*.iml
+
+### Java
+*.class
+
+### Log file
+*.log
+
+### Other
+bin
+.project
+.classpath
+.settings
+*.iws
+*.ipr
