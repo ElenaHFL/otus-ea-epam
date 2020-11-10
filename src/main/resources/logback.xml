@@ -1,0 +1,26 @@
+<configuration>
+
+    <property name="NO_COLOR_LOG_PATTERN" value="%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"/>
+    <property name="COLOR_LOG_PATTERN" value="%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level %logger{36} - %msg%n)"/>
+    <property name="LOG_ENCODING" value="UTF-8"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>${LOG_ENCODING}</charset>
+            <pattern>${COLOR_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/epam.log</file>
+        <encoder>
+            <charset>${LOG_ENCODING}</charset>
+            <pattern>${NO_COLOR_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <root level="all">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </root>
+</configuration>
