@@ -45,7 +45,7 @@ public class BaseHooks {
     }
 
     protected WebElement waitForElement(WebElement element) {
-        return new WebDriverWait(driver, 10)
+        return new WebDriverWait(driver, 15)
                 .until(ExpectedConditions.visibilityOf(element));
     }
 

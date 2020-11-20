@@ -2,6 +2,8 @@ package cases;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Execution(ExecutionMode.CONCURRENT)
 @Slf4j
 public class PageObjectTest extends BaseHooks {
 
@@ -22,7 +25,6 @@ public class PageObjectTest extends BaseHooks {
     String baseUrl = "https://events.epam.com";
 
     // Просмотр предстоящих мероприятий
-    // TODO: Дебильные ожидания подгрузки элементов, сделать обертку
     @Test
     public void viewUpcomingEventsTest() {
         HomePage homePage = new HomePage(driver);
@@ -30,7 +32,7 @@ public class PageObjectTest extends BaseHooks {
         homePage.open(baseUrl);
 
         // Пользователь переходит на вкладку events
-        homePage.homeLink.click();
+        waitForElement(homePage.homeLink).click();
 
         // Пользователь нажимает на Upcoming Events
         homePage.upcomingEventsLink.click();
@@ -56,7 +58,7 @@ public class PageObjectTest extends BaseHooks {
         homePage.open(baseUrl);
 
         // Пользователь переходит на вкладку events
-        homePage.homeLink.click();
+        waitForElement(homePage.homeLink).click();
 
         // Пользователь нажимает на Upcoming Events
         homePage.upcomingEventsLink.click();
@@ -92,7 +94,7 @@ public class PageObjectTest extends BaseHooks {
         homePage.open(baseUrl);
 
         // Пользователь переходит на вкладку events
-        homePage.homeLink.click();
+        waitForElement(homePage.homeLink).click();
 
         // Пользователь нажимает на Upcoming Events
         homePage.upcomingEventsLink.click();
@@ -130,7 +132,7 @@ public class PageObjectTest extends BaseHooks {
         homePage.open(baseUrl);
 
         // Пользователь переходит на вкладку Events
-        homePage.eventsLink.click();
+        waitForElement(homePage.eventsLink).click();
 
         // Пользователь нажимает на Past Events
         waitForElement(eventPage.pastEventsLink).click();
@@ -180,7 +182,7 @@ public class PageObjectTest extends BaseHooks {
         homePage.open(baseUrl);
 
         // Пользователь переходит на вкладку events
-        homePage.homeLink.click();
+        waitForElement(homePage.homeLink).click();
 
         // Пользователь нажимает на Upcoming Events
         homePage.upcomingEventsLink.click();
@@ -213,7 +215,7 @@ public class PageObjectTest extends BaseHooks {
         homePage.open(baseUrl);
 
         // Пользователь переходит на вкладку Video
-        homePage.videoLink.click();
+        waitForElement(homePage.videoLink).click();
 
         // Пользователь нажимает на More Filters
         videoPage.moreFilters.click();
@@ -264,10 +266,10 @@ public class PageObjectTest extends BaseHooks {
         homePage.open(baseUrl);
 
         // Пользователь переходит на вкладку Video
-        homePage.videoLink.click();
+        waitForElement(homePage.videoLink).click();
 
         // Пользователь вводит ключевое слово QA в поле поиска
-        videoPage.search.sendKeys(word);
+        waitForElement(videoPage.search).sendKeys(word);
 
         // На странице отображаются доклады, содержащие в названии ключевое слово поиска
         List<WebElement> talks = videoPage.talkСardList;
