@@ -1,5 +1,6 @@
 package pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -59,17 +60,17 @@ public class EventsPage extends AbstractPage {
         super(driver);
     }
 
-    // Найти список элементов, с учетом порядка следования
+    @Step("Найти список элементов, с учетом порядка следования")
     public List<WebElement> getFollowingElements(WebElement from, String value) {
         return from.findElements(By.xpath("//following::" + value));
     }
 
-    // Получить список дат
+    @Step("Получить список дат")
     public ArrayList<Date> getEventDates(WebElement element) throws ParseException {
         return collectDates(element.findElement(By.cssSelector("p span.date")).getText());
     }
 
-    // Посчитать количество спикеров
+    @Step("Посчитать количество спикеров")
     public Integer getSpeakersCount(List<WebElement> webElementList) {
         Integer сount = webElementList.size();
         // Могут быть дополнительные спикеры (добавим их если есть)

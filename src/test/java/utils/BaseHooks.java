@@ -1,6 +1,7 @@
 package utils;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.JavascriptExecutor;
@@ -20,7 +21,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -77,12 +77,7 @@ public class BaseHooks {
                 .until(ExpectedConditions.visibilityOf(element));
     }
 
-    protected List<WebElement> waitForElements(List<WebElement> elements) {
-        return new WebDriverWait(driver, 15)
-                .until(ExpectedConditions.visibilityOfAllElements(elements));
-    }
-
-    // Установить значение в фильтре
+    @Step("Установить значение в фильтре")
     public static void setFilter(WebElement aria, WebElement element) {
         // Раскрываем фильтр
         aria.click();
@@ -95,14 +90,14 @@ public class BaseHooks {
         aria.click();
     }
 
-    // Кликнуть по элементу, предварительно наведя на него фокус
+    @Step("Кликнуть по элементу, предварительно наведя на него фокус")
     public static void navigateAndClick(WebElement element) {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].scrollIntoView();", element);
         element.click();
     }
 
-    // Получить список дат из строкового значения
+    @Step("Получить список дат из строкового значения {value}")
     public ArrayList<Date> collectDates(String value) throws ParseException {
         ArrayList<Date> dates = new ArrayList<>();
 

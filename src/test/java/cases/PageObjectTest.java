@@ -1,5 +1,9 @@
 package cases;
 
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
@@ -24,8 +28,11 @@ public class PageObjectTest extends BaseHooks {
     private static final Logger logger = LoggerFactory.getLogger(PageObjectTest.class);
     String baseUrl = "https://events.epam.com";
 
-    // Просмотр предстоящих мероприятий
     @Test
+    @Epic("EPAM")
+    @Feature("Мероприятия")
+    @Story("Просмотр предстоящих мероприятий")
+    @Description("Тест проверяет ...")
     public void viewUpcomingEventsTest() {
         HomePage homePage = new HomePage(driver);
         EventsPage eventPage = new EventsPage(driver);
@@ -49,8 +56,11 @@ public class PageObjectTest extends BaseHooks {
         assertTrue(countByNumber.equals(countByCard.toString()), "Количество карточек НЕ равно счетчику на кнопке Upcoming Events");
     }
 
-    // Просмотр карточек мероприятий
     @Test
+    @Epic("EPAM")
+    @Feature("Мероприятия")
+    @Story("Просмотр карточек мероприятий")
+    @Description("Тест проверяет ...")
     public void viewingEventCardsTest() {
         HomePage homePage = new HomePage(driver);
         EventsPage eventPage = new EventsPage(driver);
@@ -94,8 +104,11 @@ public class PageObjectTest extends BaseHooks {
         }
     }
 
-    // Валидация дат предстоящих мероприятий
     @Test
+    @Epic("EPAM")
+    @Feature("Мероприятия")
+    @Story("Валидация дат предстоящих мероприятий")
+    @Description("Тест проверяет ...")
     public void validatingDatesForUpcomingEventsTest() throws ParseException {
         HomePage homePage = new HomePage(driver);
         EventsPage eventPage = new EventsPage(driver);
@@ -133,8 +146,11 @@ public class PageObjectTest extends BaseHooks {
         }
     }
 
-    // Просмотр прошедших мероприятий в Канаде
     @Test
+    @Epic("EPAM")
+    @Feature("Мероприятия")
+    @Story("Просмотр прошедших мероприятий в Канаде")
+    @Description("Тест проверяет ...")
     public void viewPastEventsInCanadaTest() throws ParseException {
         String country = "Canada";
 
@@ -187,8 +203,11 @@ public class PageObjectTest extends BaseHooks {
         }
     }
 
-    // Просмотр детальной информации о мероприятии
     @Test
+    @Epic("EPAM")
+    @Feature("Мероприятия")
+    @Story("Просмотр детальной информации о мероприятии")
+    @Description("Тест проверяет ...")
     public void viewingDetailedInformationAboutTheEventTest() {
         HomePage homePage = new HomePage(driver);
         EventsPage eventPage = new EventsPage(driver);
@@ -223,8 +242,11 @@ public class PageObjectTest extends BaseHooks {
         assertTrue(count > 0, "Программа мероприятия пустая");
     }
 
-    // Фильтрация докладов по категориям
     @Test
+    @Epic("EPAM")
+    @Feature("Доклады")
+    @Story("Фильтрация докладов по категориям")
+    @Description("Тест проверяет ...")
     public void filteringReportsByCategoryTest() {
         String country = "Belarus";
         String speech = "ENGLISH";
@@ -249,7 +271,7 @@ public class PageObjectTest extends BaseHooks {
         videoPage.setFilter(videoPage.categoryFilter,category);
 
         // На странице отображаются карточки соответствующие правилам выбранных фильтров
-        List<WebElement> talkNameList = waitForElements(videoPage.talkСardNameList);
+        List<WebElement> talkNameList = videoPage.talkСardNameList;
         ArrayList<String> urls = new ArrayList<>();
         for (WebElement talkName : talkNameList){
             urls.add(videoPage.getLinkFromElement(talkName));
@@ -272,9 +294,14 @@ public class PageObjectTest extends BaseHooks {
         }
     }
 
-    // Поиск докладов по ключевому слову
     @Test
+    @Epic("EPAM")
+    @Feature("Доклады")
+    @Story("Поиск докладов по ключевому слову")
+    @Description("Тест проверяет ...")
     public void searchReportsByKeywordTest() throws InterruptedException {
+
+        // Ключевое слово
         String word = "QA";
 
         HomePage homePage = new HomePage(driver);
@@ -292,7 +319,7 @@ public class PageObjectTest extends BaseHooks {
         videoPage.setSearch(word);
 
         // На странице отображаются доклады, содержащие в названии ключевое слово поиска
-        List<WebElement> talkNameList = waitForElements(videoPage.talkСardNameList);
+        List<WebElement> talkNameList = videoPage.talkСardNameList;
         ArrayList<String> urls = new ArrayList<>();
 
         // Проверяем доклады на соотв. условиям поиска

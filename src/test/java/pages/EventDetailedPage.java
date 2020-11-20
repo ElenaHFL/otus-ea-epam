@@ -25,7 +25,6 @@ public class EventDetailedPage extends AbstractPage {
     public WebElement register;
 
     // Получили информацию о дате проведения
-
     @FindAll({
             @FindBy(css = "div.evnt-details span.date"),
             @FindBy(xpath = "//section//i[contains(@class,'fa-calendar')]/ancestor::*[@class='evnt-icon-point']//*[@class='evnt-icon-info']/*[last()]")

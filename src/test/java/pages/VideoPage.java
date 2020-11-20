@@ -1,5 +1,6 @@
 package pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -29,12 +30,12 @@ public class VideoPage extends AbstractPage {
         super(driver);
     }
 
-    // Получили ссылку из элемента
+    @Step("Получили ссылку из элемента")
     public String getLinkFromElement(WebElement element) {
         return waitForElement(element.findElement(By.xpath("./ancestor::a[@href]"))).getAttribute("href");
     }
 
-    // Получили ссылку из элемента
+    @Step("Получили ссылку из элемента {value}")
     public void setSearch(String value) throws InterruptedException {
         String countBefore = foundResults.getText();
         // Пользователь вводит ключевое слово QA в поле поиска

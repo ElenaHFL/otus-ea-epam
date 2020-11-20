@@ -1,5 +1,6 @@
 package pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -29,7 +30,7 @@ public class VideoDetailedPage extends AbstractPage {
         super(driver);
     }
 
-    // Собрали в строку все категории записи
+    @Step("Собрали в строку все категории записи")
     public String getTopics() {
         return topicList.stream()
                 .map(item -> waitForElement(item).getText().trim())

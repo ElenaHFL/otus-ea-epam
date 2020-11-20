@@ -1,5 +1,6 @@
 package pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -44,7 +45,7 @@ public abstract class AbstractPage extends BaseHooks {
         PageFactory.initElements(driver, this);
     }
 
-    // Установить значение в фильтре
+    @Step("Установить значение {value} в фильтре")
     public void setFilter(WebElement aria, String value) {
         // Раскрываем фильтр
         WebElement element = aria.findElement(By.xpath("..//label[@data-value='" + value + "']"));
