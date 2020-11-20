@@ -1,17 +1,45 @@
 package pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import utils.BaseHooks;
 
 /**
  * Abstract class representation of a Page in the UI. Page object pattern
  */
-public abstract class AbstractPage {
+public abstract class AbstractPage extends BaseHooks {
 
     protected WebDriver driver;
+
+    // Получили элемент More Filters
+    @FindBys({
+            @FindBy(css = "section.evnt-filters-panel"),
+            @FindBy(xpath = "//span[text()='More Filters']")
+    })
+    public WebElement moreFilters;
+
+    // Получили зону фильтра Location
+    @FindBy(id = "filter_location")
+    public WebElement locationFilter;
+
+    // Получили зону фильтра Language
+    @FindBy(id = "filter_language")
+    public WebElement languageFilter;
+
+    // Получили зону фильтра Category
+    @FindBy(id = "filter_category")
+    public WebElement categoryFilter;
+
+    // Получили зону поиска
+    @FindBys({
+            @FindBy(css = "section.evnt-filters-panel"),
+            @FindBy(css = "input.evnt-search")
+    })
+    public WebElement search;
 
     /*
      * Constructor injecting the WebDriver interface
@@ -23,9 +51,11 @@ public abstract class AbstractPage {
         PageFactory.initElements(driver, this);
     }
 
-    protected WebElement waitForElement(WebElement element) {
-        return new WebDriverWait(driver, 10)
-                .until(ExpectedConditions.visibilityOf(element));
+    // Установить значение в фильтре
+    public void setFilter(WebElement aria, String value) {
+        // Раскрываем фильтр
+        WebElement element = aria.findElement(By.xpath("..//label[@data-value='" + value + "']"));
+        setFilter(aria, element);
     }
 
 }
