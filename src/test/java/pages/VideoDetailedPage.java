@@ -5,6 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class VideoDetailedPage extends AbstractPage {
 
@@ -26,5 +27,12 @@ public class VideoDetailedPage extends AbstractPage {
 
     public VideoDetailedPage(WebDriver driver) {
         super(driver);
+    }
+
+    // Собрали в строку все категории записи
+    public String getTopics() {
+        return topicList.stream()
+                .map(item -> waitForElement(item).getText().trim())
+                .collect(Collectors.joining(", "));
     }
 }

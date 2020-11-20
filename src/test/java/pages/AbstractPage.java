@@ -34,13 +34,6 @@ public abstract class AbstractPage extends BaseHooks {
     @FindBy(id = "filter_category")
     public WebElement categoryFilter;
 
-    // Получили зону поиска
-    @FindBys({
-            @FindBy(css = "section.evnt-filters-panel"),
-            @FindBy(css = "input.evnt-search")
-    })
-    public WebElement search;
-
     /*
      * Constructor injecting the WebDriver interface
      *

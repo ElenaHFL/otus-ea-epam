@@ -3,21 +3,30 @@ package utils;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class BaseHooks {
 
@@ -27,12 +36,31 @@ public class BaseHooks {
     /** Формат дат */
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
 
+    //@BeforeEach
+    public void setUp() throws MalformedURLException {
+        String selenoidURL = "http://localhost:4444/wd/hub";
+        DesiredCapabilities caps = new DesiredCapabilities();
+        caps.setBrowserName("chrome");
+        caps.setVersion("86.0");
+        caps.setCapability("enableVNC", true);
+        caps.setCapability("screenResolution", "1280x1024");
+        caps.setCapability("enableVideo", true);
+        caps.setCapability("enableLog", true);
+
+        driver = new RemoteWebDriver(new URL(selenoidURL), caps);
+
+        if (driver != null) {
+            driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+        }
+    }
+
     @BeforeEach
-    public void setUp() {
+    public void setUpLocal() {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
 
         if (driver != null) {
+            //driver.manage().window().maximize();
             driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
         }
     }
@@ -49,6 +77,11 @@ public class BaseHooks {
                 .until(ExpectedConditions.visibilityOf(element));
     }
 
+    protected List<WebElement> waitForElements(List<WebElement> elements) {
+        return new WebDriverWait(driver, 15)
+                .until(ExpectedConditions.visibilityOfAllElements(elements));
+    }
+
     // Установить значение в фильтре
     public static void setFilter(WebElement aria, WebElement element) {
         // Раскрываем фильтр
@@ -60,6 +93,13 @@ public class BaseHooks {
         element.click();
         // Закрываем фильтр
         aria.click();
+    }
+
+    // Кликнуть по элементу, предварительно наведя на него фокус
+    public static void navigateAndClick(WebElement element) {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].scrollIntoView();", element);
+        element.click();
     }
 
     // Получить список дат из строкового значения
@@ -82,5 +122,21 @@ public class BaseHooks {
         }
 
         return dates;
+    }
+
+    public static void waitForPageLoaded(WebDriver driver) {
+        ExpectedCondition<Boolean> expectation = new
+                ExpectedCondition<Boolean>() {
+                    public Boolean apply(WebDriver driver) {
+                        return ((JavascriptExecutor)driver).executeScript("return document.readyState").equals("complete");
+                    }
+                };
+
+        WebDriverWait wait = new WebDriverWait(driver,30);
+        try {
+            wait.until(expectation);
+        } catch(Throwable error) {
+            assertFalse(true, "Timeout waiting for Page Load Request to complete.");
+        }
     }
 }

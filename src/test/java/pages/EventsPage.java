@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.FindBys;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -42,6 +43,18 @@ public class EventsPage extends AbstractPage {
     @FindBy(css = "div.tab-content div.evnt-events-column")
     public List<WebElement> eventsByCardList;
 
+    // Получили количество карточек мероприятий за текущую неделю
+    @FindBys({
+            @FindBy(css = "div.tab-content"),
+            @FindBy(xpath = "//*[text()='This week']/.."),
+            @FindBy(css = "div.evnt-events-column")
+    })
+    public List<WebElement> eventsWeekByCardList;
+
+    // Получили информацию о категории
+    @FindBy(css = "main section div.details-cell div.topics label")
+    public List<WebElement> topicList;
+
     public EventsPage(WebDriver driver) {
         super(driver);
     }
@@ -68,4 +81,5 @@ public class EventsPage extends AbstractPage {
 
         return сount;
     }
+
 }

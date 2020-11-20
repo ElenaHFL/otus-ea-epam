@@ -2,6 +2,7 @@ package pages;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindAll;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.FindBys;
 
@@ -24,7 +25,11 @@ public class EventDetailedPage extends AbstractPage {
     public WebElement register;
 
     // Получили информацию о дате проведения
-    @FindBy(xpath = "//section//i[contains(@class,'fa-calendar')]/ancestor::*[@class='evnt-icon-point']//h4")
+
+    @FindAll({
+            @FindBy(css = "div.evnt-details span.date"),
+            @FindBy(xpath = "//section//i[contains(@class,'fa-calendar')]/ancestor::*[@class='evnt-icon-point']//*[@class='evnt-icon-info']/*[last()]")
+    })
     public WebElement date;
 
     public EventDetailedPage(WebDriver driver) {

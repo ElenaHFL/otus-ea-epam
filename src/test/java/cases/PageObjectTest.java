@@ -40,7 +40,6 @@ public class PageObjectTest extends BaseHooks {
         // На странице отображаются карточки предстоящих мероприятий. Количество карточек равно счетчику на кнопке Upcoming Events
         // Считываем значение счетчика на кнопке Upcoming Events
         String countByNumber = waitForElement(eventPage.upcomingEventsCountByNumber).getText();
-
         // Считаем сколько карточек
         Integer countByCard = eventPage.eventsByCardList.size();
 
@@ -56,12 +55,15 @@ public class PageObjectTest extends BaseHooks {
         HomePage homePage = new HomePage(driver);
         EventsPage eventPage = new EventsPage(driver);
         homePage.open(baseUrl);
+        waitForPageLoaded(driver);
 
         // Пользователь переходит на вкладку events
         waitForElement(homePage.homeLink).click();
+        waitForPageLoaded(driver);
 
         // Пользователь нажимает на Upcoming Events
         homePage.upcomingEventsLink.click();
+        waitForPageLoaded(driver);
 
         // На странице отображаются карточки предстоящих мероприятий
         if (eventPage.eventsByCardList.size() > 0) {
@@ -70,7 +72,7 @@ public class PageObjectTest extends BaseHooks {
             // • место проведения, язык
             // • название мероприятия, дата мероприятия, информация о регистрации
             // • список спикеров
-            // TODO: подумать как проверять порядок отдельно, наличие элементов отдельно
+            // TODO: подумать как разделить проверку, порядок отдельно, наличие элементов отдельно
             WebElement place = eventPage.placeField;
             WebElement language = eventPage.getFollowingElements(place, eventPage.languagePath).get(0);
             WebElement name = eventPage.getFollowingElements(language, eventPage.namePath).get(0);
@@ -79,8 +81,14 @@ public class PageObjectTest extends BaseHooks {
             List<WebElement> speakers = eventPage.getFollowingElements(status, eventPage.speakersPath);
             Integer speaker = eventPage.getSpeakersCount(speakers);
 
-            // TODO: научиться красивей лог лепить, а то строка капец длинная и вытянутая
-            logger.info(String.format("Карточки предстоящих мероприятий отображаются. Информация по первой:\n Место проведения '%s'\n Язык '%s'\n Название мероприятия '%s'\n Дата '%s'\n Регистрация '%s'\n Всего спикеров '%s'", place.getText(), language.getText(), name.getText(), date.getText(), status.getText(), speaker));
+            logger.info(new StringBuilder()
+                    .append("Карточки предстоящих мероприятий отображаются. Информация по первой:")
+                    .append("\nМесто проведения = " + place.getText())
+                    .append("\nЯзык = " + language.getText())
+                    .append("\nДата = " + date.getText())
+                    .append("\nРегистрация = " + status.getText())
+                    .append("\nВсего спикеров = " + speaker)
+                    .toString());
         } else {
             logger.warn("На странице нет ни одной карточки предстоящих мероприятий");
         }
@@ -92,19 +100,22 @@ public class PageObjectTest extends BaseHooks {
         HomePage homePage = new HomePage(driver);
         EventsPage eventPage = new EventsPage(driver);
         homePage.open(baseUrl);
+        waitForPageLoaded(driver);
 
         // Пользователь переходит на вкладку events
         waitForElement(homePage.homeLink).click();
+        waitForPageLoaded(driver);
 
         // Пользователь нажимает на Upcoming Events
         homePage.upcomingEventsLink.click();
+        waitForPageLoaded(driver);
 
         // На странице отображаются карточки предстоящих мероприятий
-        List<WebElement> cards = eventPage.eventsByCardList;
+        // В блоке This week даты проведения мероприятий больше или равны текущей дате и находятся в пределах текущей недели
+        // Если блока This week нет, сравним все что есть
+        List<WebElement> cards = eventPage.eventsWeekByCardList.size() == 0 ? eventPage.eventsByCardList : eventPage.eventsWeekByCardList;
         if (cards.size() > 0) {
 
-            // В блоке This week даты проведения мероприятий больше или равны текущей дате и находятся в пределах текущей недели
-            // TODO: блока This week нет пока, сравним все что есть
             Date today = new Date();
             ArrayList<Date> dates;
 
@@ -130,12 +141,15 @@ public class PageObjectTest extends BaseHooks {
         HomePage homePage = new HomePage(driver);
         EventsPage eventPage = new EventsPage(driver);
         homePage.open(baseUrl);
+        waitForPageLoaded(driver);
 
         // Пользователь переходит на вкладку Events
         waitForElement(homePage.eventsLink).click();
+        waitForPageLoaded(driver);
 
         // Пользователь нажимает на Past Events
         waitForElement(eventPage.pastEventsLink).click();
+        waitForPageLoaded(driver);
 
         // Пользователь нажимает на Location в блоке фильтров и выбирает Canada в выпадающем списке
         eventPage.setFilter(eventPage.locationFilter,country);
@@ -180,25 +194,33 @@ public class PageObjectTest extends BaseHooks {
         EventsPage eventPage = new EventsPage(driver);
         EventDetailedPage eventDetailedPage = new EventDetailedPage(driver);
         homePage.open(baseUrl);
+        waitForPageLoaded(driver);
 
         // Пользователь переходит на вкладку events
         waitForElement(homePage.homeLink).click();
+        waitForPageLoaded(driver);
 
         // Пользователь нажимает на Upcoming Events
         homePage.upcomingEventsLink.click();
+        waitForPageLoaded(driver);
 
         // Пользователь нажимает на любую карточку
-        eventPage.eventsByCardList.get(0).click();
-
+        List<WebElement> eventList = eventPage.eventsByCardList;
+        Integer randomIndex = (int)(Math.random()*eventList.size());
+        navigateAndClick(eventList.get(randomIndex));
         // Происходит переход на страницу с подробной информацией о мероприятии
-        // TODO: подумать как валидировать и надо ли?
+        waitForPageLoaded(driver);
 
         // На странице с информацией о мероприятии отображается блок с кнопкой для регистрации, дата и время, программа мероприятия
-        // TODO: подумать как валидировать их наличие
-        waitForElement(eventDetailedPage.register).isDisplayed();
-        String date = eventDetailedPage.date.getText();
+        WebElement register = waitForElement(eventDetailedPage.register);
+        String date = waitForElement(eventDetailedPage.date).getText();
         Integer count = eventDetailedPage.agendaList.size();
-        logger.info(String.format("У первого события в сприске дата проведения %s, в программе %s блоков", date, count));
+
+        logger.info(String.format("У выбранного события '%s' в списке дата проведения '%s', в программе блоков '%s'", randomIndex + 1, date, count));
+
+        assertTrue(register.isDisplayed(), "Кнопка регистрации НЕ отображается");
+        assertTrue(!date.equalsIgnoreCase(""), "Дата и время мероприятия отсутствуют");
+        assertTrue(count > 0, "Программа мероприятия пустая");
     }
 
     // Фильтрация докладов по категориям
@@ -216,6 +238,7 @@ public class PageObjectTest extends BaseHooks {
 
         // Пользователь переходит на вкладку Video
         waitForElement(homePage.videoLink).click();
+        waitForPageLoaded(driver);
 
         // Пользователь нажимает на More Filters
         videoPage.moreFilters.click();
@@ -226,10 +249,10 @@ public class PageObjectTest extends BaseHooks {
         videoPage.setFilter(videoPage.categoryFilter,category);
 
         // На странице отображаются карточки соответствующие правилам выбранных фильтров
-        List<WebElement> talks = videoPage.talkСardList;
+        List<WebElement> talkNameList = waitForElements(videoPage.talkСardNameList);
         ArrayList<String> urls = new ArrayList<>();
-        for (WebElement talk : talks){
-            urls.add(videoPage.getLinkFromElement(talk));
+        for (WebElement talkName : talkNameList){
+            urls.add(videoPage.getLinkFromElement(talkName));
         }
 
         for (String url : urls) {
@@ -237,16 +260,11 @@ public class PageObjectTest extends BaseHooks {
             driver.get(url);
 
             // Получаем информацию о записи
-            String language = videoDetailedPage.language.getText();
-            String location = videoDetailedPage.location.getText();
-            List<WebElement> topics = videoDetailedPage.topicList;
-            // TODO: лишний пробел спереди, переделать на красивый вариант
-            String categories = "";
-            for (WebElement topic : topics){
-                categories = categories + " " + topic.getText();
-            }
+            String language = waitForElement(videoDetailedPage.language).getText();
+            String location = waitForElement(videoDetailedPage.location).getText();
+            String categories = videoDetailedPage.getTopics();
 
-            logger.info(String.format("Информация о записи: язык = %s, место = %s, категория = %s", language, location, categories));
+            logger.info(String.format("Информация о записи: язык = '%s', место = '%s', категория = '%s'", language, location, categories));
 
             assertTrue(language.contains(speech),"Язык записи НЕ соответсвует указанному в фильтре");
             assertTrue(location.contains(country),"Место записи НЕ соответсвует указанному в фильтре");
@@ -256,7 +274,7 @@ public class PageObjectTest extends BaseHooks {
 
     // Поиск докладов по ключевому слову
     @Test
-    public void searchReportsByKeywordTest() {
+    public void searchReportsByKeywordTest() throws InterruptedException {
         String word = "QA";
 
         HomePage homePage = new HomePage(driver);
@@ -264,28 +282,31 @@ public class PageObjectTest extends BaseHooks {
         VideoDetailedPage videoDetailedPage = new VideoDetailedPage(driver);
 
         homePage.open(baseUrl);
+        waitForPageLoaded(driver);
 
         // Пользователь переходит на вкладку Video
         waitForElement(homePage.videoLink).click();
+        waitForPageLoaded(driver);
 
         // Пользователь вводит ключевое слово QA в поле поиска
-        waitForElement(videoPage.search).sendKeys(word);
+        videoPage.setSearch(word);
 
         // На странице отображаются доклады, содержащие в названии ключевое слово поиска
-        List<WebElement> talks = videoPage.talkСardList;
+        List<WebElement> talkNameList = waitForElements(videoPage.talkСardNameList);
         ArrayList<String> urls = new ArrayList<>();
 
         // Проверяем доклады на соотв. условиям поиска
-        for (WebElement talk : talks){
-            String name = videoPage.getTalkNameFromCard(talk);
+        for (WebElement talkName : talkNameList){
+            String name = talkName.getText();
             if (name.contains(word)){
                 logger.info(String.format("Доклад с названием '%s' содержит слово '%s'", name, word));
             }else{
                 // Возможно название не поместилось полностью на карточке, надо проверить на странице с ее описание, собираем url-ы таких докладов
-                urls.add(videoPage.getLinkFromElement(talk));
+                urls.add(videoPage.getLinkFromElement(talkName));
             }
         }
 
+        // Проверяем детальные карточки докладов, у которых на свернутой форме не было обнаружено ключевое слово поиска
         for (String url : urls) {
             // Переходим на страницу с деталями записи
             driver.get(url);
