@@ -2,6 +2,7 @@ package pages;
 
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -60,17 +61,17 @@ public class EventsPage extends AbstractPage {
         super(driver);
     }
 
-    @Step("Найти список элементов, с учетом порядка следования")
+    //Найти список элементов, с учетом порядка следования
     public List<WebElement> getFollowingElements(WebElement from, String value) {
         return from.findElements(By.xpath("//following::" + value));
     }
 
-    @Step("Получить список дат")
+    //Получить список дат
     public ArrayList<Date> getEventDates(WebElement element) throws ParseException {
         return collectDates(element.findElement(By.cssSelector("p span.date")).getText());
     }
 
-    @Step("Посчитать количество спикеров")
+    //Посчитать количество спикеров
     public Integer getSpeakersCount(List<WebElement> webElementList) {
         Integer сount = webElementList.size();
         // Могут быть дополнительные спикеры (добавим их если есть)
@@ -83,4 +84,11 @@ public class EventsPage extends AbstractPage {
         return сount;
     }
 
+    @Step("Переход на страницу с подробной информацией о мероприятии, через клик по карточке")
+    public EventDetailedPage navigateAndClick(WebElement element) {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].scrollIntoView();", element);
+        element.click();
+        return new EventDetailedPage(driver);
+    }
 }

@@ -23,30 +23,29 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Slf4j
-public class PageObjectTest extends BaseHooks {
+public class EventsPageTest extends BaseHooks {
 
-    private static final Logger logger = LoggerFactory.getLogger(PageObjectTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(EventsPageTest.class);
     String baseUrl = "https://events.epam.com";
 
     @Test
     @Epic("EPAM")
     @Feature("Мероприятия")
     @Story("Просмотр предстоящих мероприятий")
-    @Description("Тест проверяет ...")
+    @Description("Тест проверяет корректность отображения списка предстоящих мероприятий")
     public void viewUpcomingEventsTest() {
         HomePage homePage = new HomePage(driver);
-        EventsPage eventPage = new EventsPage(driver);
         homePage.open(baseUrl);
 
         // Пользователь переходит на вкладку events
-        waitForElement(homePage.homeLink).click();
+        homePage.openHomeByTab();
 
         // Пользователь нажимает на Upcoming Events
-        homePage.upcomingEventsLink.click();
+        EventsPage eventPage = homePage.openEventsByLink();
 
         // На странице отображаются карточки предстоящих мероприятий. Количество карточек равно счетчику на кнопке Upcoming Events
         // Считываем значение счетчика на кнопке Upcoming Events
-        String countByNumber = waitForElement(eventPage.upcomingEventsCountByNumber).getText();
+        String countByNumber = eventPage.upcomingEventsCountByNumber.getText();
         // Считаем сколько карточек
         Integer countByCard = eventPage.eventsByCardList.size();
 
@@ -60,20 +59,16 @@ public class PageObjectTest extends BaseHooks {
     @Epic("EPAM")
     @Feature("Мероприятия")
     @Story("Просмотр карточек мероприятий")
-    @Description("Тест проверяет ...")
+    @Description("Тест проверяет отображение информации на карточках мероприятий")
     public void viewingEventCardsTest() {
         HomePage homePage = new HomePage(driver);
-        EventsPage eventPage = new EventsPage(driver);
         homePage.open(baseUrl);
-        waitForPageLoaded(driver);
 
         // Пользователь переходит на вкладку events
-        waitForElement(homePage.homeLink).click();
-        waitForPageLoaded(driver);
+        homePage.openHomeByTab();
 
         // Пользователь нажимает на Upcoming Events
-        homePage.upcomingEventsLink.click();
-        waitForPageLoaded(driver);
+        EventsPage eventPage = homePage.openEventsByLink();
 
         // На странице отображаются карточки предстоящих мероприятий
         if (eventPage.eventsByCardList.size() > 0) {
@@ -108,20 +103,16 @@ public class PageObjectTest extends BaseHooks {
     @Epic("EPAM")
     @Feature("Мероприятия")
     @Story("Валидация дат предстоящих мероприятий")
-    @Description("Тест проверяет ...")
+    @Description("Тест проверяет, что даты предстоящих мероприятий больше текущей даты")
     public void validatingDatesForUpcomingEventsTest() throws ParseException {
         HomePage homePage = new HomePage(driver);
-        EventsPage eventPage = new EventsPage(driver);
         homePage.open(baseUrl);
-        waitForPageLoaded(driver);
 
         // Пользователь переходит на вкладку events
-        waitForElement(homePage.homeLink).click();
-        waitForPageLoaded(driver);
+        homePage.openHomeByTab();
 
         // Пользователь нажимает на Upcoming Events
-        homePage.upcomingEventsLink.click();
-        waitForPageLoaded(driver);
+        EventsPage eventPage = homePage.openEventsByLink();
 
         // На странице отображаются карточки предстоящих мероприятий
         // В блоке This week даты проведения мероприятий больше или равны текущей дате и находятся в пределах текущей недели
@@ -150,29 +141,28 @@ public class PageObjectTest extends BaseHooks {
     @Epic("EPAM")
     @Feature("Мероприятия")
     @Story("Просмотр прошедших мероприятий в Канаде")
-    @Description("Тест проверяет ...")
+    @Description("Тест проверяет отображение прошедших мероприятий в Канаде")
     public void viewPastEventsInCanadaTest() throws ParseException {
         String country = "Canada";
 
         HomePage homePage = new HomePage(driver);
-        EventsPage eventPage = new EventsPage(driver);
         homePage.open(baseUrl);
-        waitForPageLoaded(driver);
+
+        // Пользователь переходит на вкладку events
+        homePage.openHomeByTab();
 
         // Пользователь переходит на вкладку Events
-        waitForElement(homePage.eventsLink).click();
-        waitForPageLoaded(driver);
+        EventsPage eventPage = homePage.openEventsByTab();
 
         // Пользователь нажимает на Past Events
-        waitForElement(eventPage.pastEventsLink).click();
-        waitForPageLoaded(driver);
+        eventPage.pastEventsLink.click();
 
         // Пользователь нажимает на Location в блоке фильтров и выбирает Canada в выпадающем списке
-        eventPage.setFilter(eventPage.locationFilter,country);
+        eventPage.setFilter(eventPage.locationFilter, country);
 
         // На странице отображаются карточки прошедших мероприятий. Количество карточек равно счетчику на кнопке Past Events
         // Считываем значение счетчика на кнопке Upcoming Events
-        String countByNumber = waitForElement(eventPage.pastEventsCountByNumber).getText();
+        String countByNumber = eventPage.pastEventsCountByNumber.getText();
         // Считаем сколько карточек
         Integer countByCard = eventPage.eventsByCardList.size();
 
@@ -207,143 +197,33 @@ public class PageObjectTest extends BaseHooks {
     @Epic("EPAM")
     @Feature("Мероприятия")
     @Story("Просмотр детальной информации о мероприятии")
-    @Description("Тест проверяет ...")
+    @Description("Тест проверяет отображение детальной информации о мероприятии")
     public void viewingDetailedInformationAboutTheEventTest() {
         HomePage homePage = new HomePage(driver);
-        EventsPage eventPage = new EventsPage(driver);
-        EventDetailedPage eventDetailedPage = new EventDetailedPage(driver);
         homePage.open(baseUrl);
-        waitForPageLoaded(driver);
 
         // Пользователь переходит на вкладку events
-        waitForElement(homePage.homeLink).click();
-        waitForPageLoaded(driver);
+        homePage.openHomeByTab();
 
         // Пользователь нажимает на Upcoming Events
-        homePage.upcomingEventsLink.click();
-        waitForPageLoaded(driver);
+        EventsPage eventPage = homePage.openEventsByLink();
 
         // Пользователь нажимает на любую карточку
+        // Происходит переход на страницу с подробной информацией о мероприятии
         List<WebElement> eventList = eventPage.eventsByCardList;
         Integer randomIndex = (int)(Math.random()*eventList.size());
-        navigateAndClick(eventList.get(randomIndex));
-        // Происходит переход на страницу с подробной информацией о мероприятии
-        waitForPageLoaded(driver);
+        EventDetailedPage eventDetailedPage = eventPage.navigateAndClick(eventList.get(randomIndex));
 
         // На странице с информацией о мероприятии отображается блок с кнопкой для регистрации, дата и время, программа мероприятия
-        WebElement register = waitForElement(eventDetailedPage.register);
-        String date = waitForElement(eventDetailedPage.date).getText();
+        WebElement register = eventDetailedPage.register;
+        String date = eventDetailedPage.date.getText();
         Integer count = eventDetailedPage.agendaList.size();
 
-        logger.info(String.format("У выбранного события '%s' в списке дата проведения '%s', в программе блоков '%s'", randomIndex + 1, date, count));
+        logger.info(String.format("У выбранного события (в списке '%s'-й) дата проведения '%s', в программе блоков '%s'", randomIndex + 1, date, count));
 
         assertTrue(register.isDisplayed(), "Кнопка регистрации НЕ отображается");
         assertTrue(!date.equalsIgnoreCase(""), "Дата и время мероприятия отсутствуют");
         assertTrue(count > 0, "Программа мероприятия пустая");
-    }
-
-    @Test
-    @Epic("EPAM")
-    @Feature("Доклады")
-    @Story("Фильтрация докладов по категориям")
-    @Description("Тест проверяет ...")
-    public void filteringReportsByCategoryTest() {
-        String country = "Belarus";
-        String speech = "ENGLISH";
-        String category = "Testing";
-
-        HomePage homePage = new HomePage(driver);
-        VideoPage videoPage = new VideoPage(driver);
-        VideoDetailedPage videoDetailedPage = new VideoDetailedPage(driver);
-
-        homePage.open(baseUrl);
-
-        // Пользователь переходит на вкладку Video
-        waitForElement(homePage.videoLink).click();
-        waitForPageLoaded(driver);
-
-        // Пользователь нажимает на More Filters
-        videoPage.moreFilters.click();
-
-        // Пользователь выбирает: Category – Testing, Location – Belarus, Language – English, На развернутой вкладке фильтров
-        videoPage.setFilter(videoPage.locationFilter,country);
-        videoPage.setFilter(videoPage.languageFilter,speech);
-        videoPage.setFilter(videoPage.categoryFilter,category);
-
-        // На странице отображаются карточки соответствующие правилам выбранных фильтров
-        List<WebElement> talkNameList = videoPage.talkСardNameList;
-        ArrayList<String> urls = new ArrayList<>();
-        for (WebElement talkName : talkNameList){
-            urls.add(videoPage.getLinkFromElement(talkName));
-        }
-
-        for (String url : urls) {
-            // Переходим на страницу с деталями записи
-            driver.get(url);
-
-            // Получаем информацию о записи
-            String language = waitForElement(videoDetailedPage.language).getText();
-            String location = waitForElement(videoDetailedPage.location).getText();
-            String categories = videoDetailedPage.getTopics();
-
-            logger.info(String.format("Информация о записи: язык = '%s', место = '%s', категория = '%s'", language, location, categories));
-
-            assertTrue(language.contains(speech),"Язык записи НЕ соответсвует указанному в фильтре");
-            assertTrue(location.contains(country),"Место записи НЕ соответсвует указанному в фильтре");
-            assertTrue(categories.contains(category),"Категория записи НЕ соответсвует указанному в фильтре");
-        }
-    }
-
-    @Test
-    @Epic("EPAM")
-    @Feature("Доклады")
-    @Story("Поиск докладов по ключевому слову")
-    @Description("Тест проверяет ...")
-    public void searchReportsByKeywordTest() throws InterruptedException {
-
-        // Ключевое слово
-        String word = "QA";
-
-        HomePage homePage = new HomePage(driver);
-        VideoPage videoPage = new VideoPage(driver);
-        VideoDetailedPage videoDetailedPage = new VideoDetailedPage(driver);
-
-        homePage.open(baseUrl);
-        waitForPageLoaded(driver);
-
-        // Пользователь переходит на вкладку Video
-        waitForElement(homePage.videoLink).click();
-        waitForPageLoaded(driver);
-
-        // Пользователь вводит ключевое слово QA в поле поиска
-        videoPage.setSearch(word);
-
-        // На странице отображаются доклады, содержащие в названии ключевое слово поиска
-        List<WebElement> talkNameList = videoPage.talkСardNameList;
-        ArrayList<String> urls = new ArrayList<>();
-
-        // Проверяем доклады на соотв. условиям поиска
-        for (WebElement talkName : talkNameList){
-            String name = talkName.getText();
-            if (name.contains(word)){
-                logger.info(String.format("Доклад с названием '%s' содержит слово '%s'", name, word));
-            }else{
-                // Возможно название не поместилось полностью на карточке, надо проверить на странице с ее описание, собираем url-ы таких докладов
-                urls.add(videoPage.getLinkFromElement(talkName));
-            }
-        }
-
-        // Проверяем детальные карточки докладов, у которых на свернутой форме не было обнаружено ключевое слово поиска
-        for (String url : urls) {
-            // Переходим на страницу с деталями записи
-            driver.get(url);
-
-            // Получаем информации о названии
-            String title = videoDetailedPage.title.getText();
-
-            logger.info(String.format("Доклад с названием '%s' содержит слово '%s'", title, word));
-            assertTrue(title.contains(word),"Доклад с названием НЕ соответсвует условиям поиска");
-        }
     }
 
 }

@@ -1,12 +1,13 @@
 package pages;
 
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.FindBys;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 public class VideoPage extends AbstractPage {
@@ -30,12 +31,12 @@ public class VideoPage extends AbstractPage {
         super(driver);
     }
 
-    @Step("Получили ссылку из элемента")
+    //Получение ссылки из элемента
     public String getLinkFromElement(WebElement element) {
-        return waitForElement(element.findElement(By.xpath("./ancestor::a[@href]"))).getAttribute("href");
+        return waitForElement(element).findElement(By.xpath("./ancestor::a[@href]")).getAttribute("href");
     }
 
-    @Step("Получили ссылку из элемента {value}")
+    @Step("Ввод в поисковую строку значения {value}")
     public void setSearch(String value) throws InterruptedException {
         String countBefore = foundResults.getText();
         // Пользователь вводит ключевое слово QA в поле поиска
@@ -44,5 +45,22 @@ public class VideoPage extends AbstractPage {
         while(foundResults.getText().equals(countBefore)){
             Thread.sleep(500);
         }
+        Allure.addAttachment("Поиск", new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES)));
     }
+
+    @Step("Установка в фильтре значения - {value}")
+    public void setFilterWithScroll(WebElement aria, String value) {
+        WebElement element = aria.findElement(By.xpath("..//label[@data-value='" + value + "']"));
+
+        // Раскрываем фильтр
+        aria.click();
+        // На случай если есть скролл в списке значени
+        Actions builder = new Actions(driver);
+        builder.moveToElement(element).perform();
+        element.click();
+
+        // Закрываем фильтр
+        aria.click();
+    }
+
 }

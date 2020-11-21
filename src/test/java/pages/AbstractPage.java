@@ -1,13 +1,16 @@
 package pages;
 
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.BaseHooks;
+
+import java.io.ByteArrayInputStream;
 
 /**
  * Abstract class representation of a Page in the UI. Page object pattern
@@ -45,11 +48,17 @@ public abstract class AbstractPage extends BaseHooks {
         PageFactory.initElements(driver, this);
     }
 
-    @Step("Установить значение {value} в фильтре")
+    public WebElement waitForElement(WebElement element) {
+        return new WebDriverWait(driver, 15)
+                .until(ExpectedConditions.visibilityOf(element));
+    }
+
+    @Step("Установка в фильтре значения - {value}")
     public void setFilter(WebElement aria, String value) {
         // Раскрываем фильтр
         WebElement element = aria.findElement(By.xpath("..//label[@data-value='" + value + "']"));
         setFilter(aria, element);
+        Allure.addAttachment("Фильтр", new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES)));
     }
 
 }
