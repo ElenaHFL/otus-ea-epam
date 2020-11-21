@@ -5,6 +5,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -25,15 +26,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Slf4j
 public class VideoPageTest extends BaseHooks {
 
+    /** Логгер */
     private static final Logger logger = LoggerFactory.getLogger(VideoPageTest.class);
+    /** Базовая ссылка на проверяемый сайт */
     String baseUrl = "https://events.epam.com";
 
     @Test
+    @DisplayName("test_6_filteringReportsByCategory")
     @Epic("EPAM")
     @Feature("Доклады")
     @Story("Фильтрация докладов по категориям")
     @Description("Тест проверяет работу фильтра на вкладке с докладами")
     public void filteringReportsByCategoryTest() {
+
+        /** Данные для теста */
         String country = "Belarus";
         String speech = "ENGLISH";
         String category = "Testing";
@@ -78,13 +84,14 @@ public class VideoPageTest extends BaseHooks {
     }
 
     @Test
+    @DisplayName("test_7_searchReportsByKeyword")
     @Epic("EPAM")
     @Feature("Доклады")
     @Story("Поиск докладов по ключевому слову")
     @Description("Тест проверяет работу поиска на вкладке с докладами")
     public void searchReportsByKeywordTest() throws InterruptedException {
 
-        // Ключевое слово
+        /** Данные для теста */
         String word = "QA";
 
         HomePage homePage = new HomePage(driver);

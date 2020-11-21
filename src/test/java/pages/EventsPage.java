@@ -15,37 +15,47 @@ import java.util.List;
 
 import static java.lang.Integer.parseInt;
 
+/**
+ * Класс описывающий страницу мероприятий
+ */
 public class EventsPage extends AbstractPage {
 
+    /** Тег с данными о языке */
     public String languagePath = "p[@class='language']";
+    /** Тег с данными о названии */
     public String namePath = "div[@class='evnt-event-name']//span";
+    /** Тег с данными о дате */
     public String datePath = "div[@class='evnt-event-dates']//span[@class='date']";
+    /** Тег с данными о статусе */
     public String statusPath = "span[contains(@class,'status')]";
+    /** Тег с данными о выступающих */
     public String speakersPath = "div[@class='evnt-speaker'][data-name]";
 
+    /** Данные о месте проведения */
     @FindBy(css = "div.tab-content div.evnt-events-column p.online")
     public WebElement placeField;
 
+    /** Список дополнительных выступающих */
     @FindBy(css = "div.tab-content div.evnt-events-column div.evnt-speaker.more span")
     public List<WebElement> speakerMoreField;
 
-    // Получили ссылку на Past Events
+    /** Ссылка на Past Events */
     @FindBy(xpath = "//main//span[text()='Past Events']/..")
     public WebElement pastEventsLink;
 
-    // Получили значение счетчика на кнопке Upcoming Events
+    /** Значение счетчика на кнопке Upcoming Events */
     @FindBy(xpath = "//main//span[text()='Upcoming events']/../span[3]")
     public WebElement upcomingEventsCountByNumber;
 
-    // Получили значение счетчика на кнопке Past Events
+    /** Значение счетчика на кнопке Past Events */
     @FindBy(xpath = "//main//span[text()='Past Events']/../span[3]")
     public WebElement pastEventsCountByNumber;
 
-    // Получили количество карточек мероприятий
+    /** Список карточек мероприятий */
     @FindBy(css = "div.tab-content div.evnt-events-column")
     public List<WebElement> eventsByCardList;
 
-    // Получили количество карточек мероприятий за текущую неделю
+    /** Список карточек мероприятий за текущую неделю */
     @FindBys({
             @FindBy(css = "div.tab-content"),
             @FindBy(xpath = "//*[text()='This week']/.."),
@@ -53,25 +63,37 @@ public class EventsPage extends AbstractPage {
     })
     public List<WebElement> eventsWeekByCardList;
 
-    // Получили информацию о категории
-    @FindBy(css = "main section div.details-cell div.topics label")
-    public List<WebElement> topicList;
-
+    /**
+     * Конструктор - создание нового объекта
+     */
     public EventsPage(WebDriver driver) {
         super(driver);
     }
 
-    //Найти список элементов, с учетом порядка следования
+    /**
+     * Функция поиска веб-элементов, следующих за указанным в параметре
+     * @param from - точка отсчета для поиска
+     * @param value - часть локатора для поиска
+     * @return список веб-элементов
+     */
     public List<WebElement> getFollowingElements(WebElement from, String value) {
         return from.findElements(By.xpath("//following::" + value));
     }
 
-    //Получить список дат
+    /**
+     * Функция для получения списка дат
+     * @param element - веб-элемент, из которого будут извлекаться даты
+     * @return список дат
+     */
     public ArrayList<Date> getEventDates(WebElement element) throws ParseException {
         return collectDates(element.findElement(By.cssSelector("p span.date")).getText());
     }
 
-    //Посчитать количество спикеров
+    /**
+     * Функция для подсчета количества спикеров (основные + дополнительные)
+     * @param webElementList - список спикеров в виде веб-элементов
+     * @return количество спикеров
+     */
     public Integer getSpeakersCount(List<WebElement> webElementList) {
         Integer сount = webElementList.size();
         // Могут быть дополнительные спикеры (добавим их если есть)

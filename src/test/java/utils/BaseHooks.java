@@ -4,6 +4,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInfo;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -14,6 +15,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
@@ -23,23 +25,31 @@ import java.util.regex.Pattern;
 
 public class BaseHooks {
 
+    /** Драйвер */
     protected WebDriver driver;
-
     /** Регулярное выражение для выделения дат */
     private final Pattern DATE_PATTERN = Pattern.compile("\\s*(\\d{1,2})\\s*-\\s*(\\d{1,2})(\\s*\\D{3}\\s*\\d{4})");
     /** Формат дат */
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
 
-    //@BeforeEach
-    public void setUp() throws MalformedURLException {
+    @BeforeEach
+    public void setUp(TestInfo testInfo) throws MalformedURLException {
+
+        // Получили название теста
+        String testName = String.valueOf(testInfo.getDisplayName());
+        // Получили время выполнения теста
+        String testTime = LocalDateTime.now().toString().replaceAll("[:.]","_");
+
         String selenoidURL = "http://localhost:4444/wd/hub";
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setBrowserName("chrome");
         caps.setVersion("86.0");
         caps.setCapability("enableVNC", true);
-        caps.setCapability("screenResolution", "1280x1024");
-        //caps.setCapability("enableVideo", true);
+        caps.setCapability("enableVideo", true);
         caps.setCapability("enableLog", true);
+        caps.setCapability("screenResolution", "1280x1024");
+        caps.setCapability("logName", testName + "_" + testTime + ".log");
+        caps.setCapability("videoName", testName + "_" + testTime + ".mp4");
 
         driver = new RemoteWebDriver(new URL(selenoidURL), caps);
 
@@ -49,7 +59,7 @@ public class BaseHooks {
         }
     }
 
-    @BeforeEach
+    //@BeforeEach
     public void setUpLocal() {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();

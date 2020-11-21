@@ -17,37 +17,40 @@ import java.io.ByteArrayInputStream;
  */
 public abstract class AbstractPage extends BaseHooks {
 
+    /** Драйвер */
     protected WebDriver driver;
 
-    // Получили элемент More Filters
+    /** Элемент More Filters */
     @FindBys({
             @FindBy(css = "section.evnt-filters-panel"),
             @FindBy(xpath = "//span[text()='More Filters']")
     })
     public WebElement moreFilters;
 
-    // Получили зону фильтра Location
+    /** Зона фильтра Location */
     @FindBy(id = "filter_location")
     public WebElement locationFilter;
 
-    // Получили зону фильтра Language
+    /** Зона фильтра Language */
     @FindBy(id = "filter_language")
     public WebElement languageFilter;
 
-    // Получили зону фильтра Category
+    /** Зона фильтра Category */
     @FindBy(id = "filter_category")
     public WebElement categoryFilter;
 
-    /*
-     * Constructor injecting the WebDriver interface
-     *
-     * @param webDriver
+    /**
+     * Конструктор - создание нового объекта
      */
     public AbstractPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
     }
 
+    /**
+     * Функция ожидания веб-элемент
+     * @return веб-элемент
+     */
     public WebElement waitForElement(WebElement element) {
         return new WebDriverWait(driver, 15)
                 .until(ExpectedConditions.visibilityOf(element));

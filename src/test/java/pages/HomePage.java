@@ -10,24 +10,30 @@ import org.openqa.selenium.support.FindBy;
 
 import java.io.ByteArrayInputStream;
 
+/**
+ * Класс описывающий домашнюю страницу
+ */
 public class HomePage extends AbstractPage {
 
-    // Получили ссылку на Home
+    /** Ссылка на домашнюю страницу */
     @FindBy(css = "header span.evnt-logo")
     public WebElement homeLink;
 
-    // Получили ссылку на вкладку Events
+    /** Ссылка на вкладку Events */
     @FindBy(xpath = "//header//a[text()='Events']")
     public WebElement eventsLink;
 
-    // Получили ссылку на вкладку Video
+    /** Ссылка на вкладку Video */
     @FindBy(xpath = "//header//a[text()='Video']")
     public WebElement videoLink;
 
-    // Получили ссылку на Upcoming Events
+    /** Ссылка на Upcoming Events */
     @FindBy(xpath = "//main//a[text()='Upcoming events']")
     public WebElement upcomingEventsLink;
 
+    /**
+     * Конструктор - создание нового объекта
+     */
     public HomePage(WebDriver driver) {
         super(driver);
     }

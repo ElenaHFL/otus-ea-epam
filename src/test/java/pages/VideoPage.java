@@ -10,28 +10,37 @@ import org.openqa.selenium.support.FindBys;
 import java.io.ByteArrayInputStream;
 import java.util.List;
 
+/**
+ * Класс описывающий страницу с видео материалами о выступлениях
+ */
 public class VideoPage extends AbstractPage {
 
-    // Получили список выступлений
+    /** Список названий выступлений на карточках */
     @FindBy(css = "section.evnt-talks-panel div.evnt-talk-card div.evnt-talk-name span")
     public List<WebElement> talkСardNameList;
 
-    // Получили список выступлений
+    /** Список выступлений */
     @FindBy(css = "section.evnt-filters-panel .evnt-results-cell span")
     public WebElement foundResults;
 
-    // Получили зону поиска
+    /** Поле поиска */
     @FindBys({
             @FindBy(css = "section.evnt-filters-panel"),
             @FindBy(css = "input.evnt-search")
     })
     public WebElement search;
 
+    /**
+     * Конструктор - создание нового объекта
+     */
     public VideoPage(WebDriver driver) {
         super(driver);
     }
 
-    //Получение ссылки из элемента
+    /**
+     * Функция получения из веб-элемента ссылки на на детальную карточку выступления
+     * @return строку
+     */
     public String getLinkFromElement(WebElement element) {
         return waitForElement(element).findElement(By.xpath("./ancestor::a[@href]")).getAttribute("href");
     }

@@ -5,6 +5,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -25,10 +26,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Slf4j
 public class EventsPageTest extends BaseHooks {
 
-    private static final Logger logger = LoggerFactory.getLogger(EventsPageTest.class);
+    /** Логгер */
+    private static final Logger logger = LoggerFactory.getLogger(VideoPageTest.class);
+    /** Базовая ссылка на проверяемый сайт */
     String baseUrl = "https://events.epam.com";
 
     @Test
+    @DisplayName("test_1_viewUpcomingEvents")
     @Epic("EPAM")
     @Feature("Мероприятия")
     @Story("Просмотр предстоящих мероприятий")
@@ -56,6 +60,7 @@ public class EventsPageTest extends BaseHooks {
     }
 
     @Test
+    @DisplayName("test_2_viewingEventCards")
     @Epic("EPAM")
     @Feature("Мероприятия")
     @Story("Просмотр карточек мероприятий")
@@ -100,6 +105,7 @@ public class EventsPageTest extends BaseHooks {
     }
 
     @Test
+    @DisplayName("test_3_validatingDatesForUpcomingEvents")
     @Epic("EPAM")
     @Feature("Мероприятия")
     @Story("Валидация дат предстоящих мероприятий")
@@ -138,11 +144,14 @@ public class EventsPageTest extends BaseHooks {
     }
 
     @Test
+    @DisplayName("test_4_viewPastEventsInCanada")
     @Epic("EPAM")
     @Feature("Мероприятия")
     @Story("Просмотр прошедших мероприятий в Канаде")
     @Description("Тест проверяет отображение прошедших мероприятий в Канаде")
     public void viewPastEventsInCanadaTest() throws ParseException {
+
+        /** Данные для теста */
         String country = "Canada";
 
         HomePage homePage = new HomePage(driver);
@@ -194,6 +203,7 @@ public class EventsPageTest extends BaseHooks {
     }
 
     @Test
+    @DisplayName("test_5_viewingDetailedInformationAboutTheEvent")
     @Epic("EPAM")
     @Feature("Мероприятия")
     @Story("Просмотр детальной информации о мероприятии")
@@ -219,7 +229,7 @@ public class EventsPageTest extends BaseHooks {
         String date = eventDetailedPage.date.getText();
         Integer count = eventDetailedPage.agendaList.size();
 
-        logger.info(String.format("У выбранного события (в списке '%s'-й) дата проведения '%s', в программе блоков '%s'", randomIndex + 1, date, count));
+        logger.info(String.format("У выбранного события (в списке '%s'й) дата проведения '%s', в программе блоков '%s'", randomIndex + 1, date, count));
 
         assertTrue(register.isDisplayed(), "Кнопка регистрации НЕ отображается");
         assertTrue(!date.equalsIgnoreCase(""), "Дата и время мероприятия отсутствуют");

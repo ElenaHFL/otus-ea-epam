@@ -6,17 +6,16 @@
         "image": "selenoid/vnc_chrome:86.0",
         "port": "4444",
         "path": "/",
-        "tmpfs": {
-          "/tmp": "size=128m"
-        }
+        "tmpfs": {"/tmp": "size=512m"},
+        "shmSize" : 268435456,
+        "cpu" : "1.0",
+        "mem" : "512m"
       },
       "85.0": {
         "image": "selenoid/vnc_chrome:85.0",
         "port": "4444",
         "path": "/",
-        "tmpfs": {
-          "/tmp": "size=128m"
-        }
+        "tmpfs": {"/tmp": "size=512m"}
       }
     }
   },
@@ -27,17 +26,13 @@
         "image": "selenoid/vnc_firefox:77.0",
         "port": "4444",
         "path": "/wd/hub",
-        "tmpfs": {
-          "/tmp": "size=128m"
-        }
+        "tmpfs": {"/tmp": "size=512m"}
       },
       "78.0": {
         "image": "selenoid/vnc_firefox:78.0",
         "port": "4444",
         "path": "/wd/hub",
-        "tmpfs": {
-          "/tmp": "size=128m"
-        }
+        "tmpfs": {"/tmp": "size=512m"}
       }
     }
   },
@@ -48,17 +43,13 @@
         "image": "selenoid/vnc_opera:68.0",
         "port": "4444",
         "path": "/",
-        "tmpfs": {
-          "/tmp": "size=128m"
-        }
+        "tmpfs": {"/tmp": "size=512m"}
       },
       "69.0": {
         "image": "selenoid/vnc_opera:69.0",
         "port": "4444",
         "path": "/",
-        "tmpfs": {
-          "/tmp": "size=128m"
-        }
+        "tmpfs": {"/tmp": "size=512m"}
       }
     }
   }
