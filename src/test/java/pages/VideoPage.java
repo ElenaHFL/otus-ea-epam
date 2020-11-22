@@ -45,7 +45,7 @@ public class VideoPage extends AbstractPage {
         return waitForElement(element).findElement(By.xpath("./ancestor::a[@href]")).getAttribute("href");
     }
 
-    @Step("Ввод в поисковую строку значения {value}")
+    @Step("Ввод в поисковую строку значения - '{value}'")
     public void setSearch(String value) throws InterruptedException {
         String countBefore = foundResults.getText();
         // Пользователь вводит ключевое слово QA в поле поиска
@@ -57,7 +57,7 @@ public class VideoPage extends AbstractPage {
         Allure.addAttachment("Поиск", new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES)));
     }
 
-    @Step("Установка в фильтре значения - {value}")
+    @Step("Установка в фильтре значения - '{value}'")
     public void setFilterWithScroll(WebElement aria, String value) {
         WebElement element = aria.findElement(By.xpath("..//label[@data-value='" + value + "']"));
 

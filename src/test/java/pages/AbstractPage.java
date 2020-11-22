@@ -52,11 +52,20 @@ public abstract class AbstractPage extends BaseHooks {
      * @return веб-элемент
      */
     public WebElement waitForElement(WebElement element) {
-        return new WebDriverWait(driver, 15)
+        return new WebDriverWait(driver, 10)
                 .until(ExpectedConditions.visibilityOf(element));
     }
 
-    @Step("Установка в фильтре значения - {value}")
+    /**
+     * Функция ожидания загрузки страницы, проверяем что отсутствует индикатор загрузки
+     * @return веб-элемент
+     */
+    public void waitForPageLoaded() {
+       new WebDriverWait(driver, 5, 100)
+               .until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("div.evnt-loader")));
+    }
+
+    @Step("Установка в фильтре значения - '{value}'")
     public void setFilter(WebElement aria, String value) {
         // Раскрываем фильтр
         WebElement element = aria.findElement(By.xpath("..//label[@data-value='" + value + "']"));

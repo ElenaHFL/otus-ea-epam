@@ -28,8 +28,6 @@ public class VideoPageTest extends BaseHooks {
 
     /** Логгер */
     private static final Logger logger = LoggerFactory.getLogger(VideoPageTest.class);
-    /** Базовая ссылка на проверяемый сайт */
-    String baseUrl = "https://events.epam.com";
 
     @Test
     @DisplayName("test_6_filteringReportsByCategory")

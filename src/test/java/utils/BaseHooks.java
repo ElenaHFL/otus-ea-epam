@@ -31,14 +31,16 @@ public class BaseHooks {
     private final Pattern DATE_PATTERN = Pattern.compile("\\s*(\\d{1,2})\\s*-\\s*(\\d{1,2})(\\s*\\D{3}\\s*\\d{4})");
     /** Формат дат */
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
+    /** Базовая ссылка на проверяемый сайт */
+    protected static String baseUrl;
 
-    @BeforeEach
+    //@BeforeEach
     public void setUp(TestInfo testInfo) throws MalformedURLException {
 
         // Получили название теста
         String testName = String.valueOf(testInfo.getDisplayName());
         // Получили время выполнения теста
-        String testTime = LocalDateTime.now().toString().replaceAll("[:.]","_");
+        String testTime = LocalDateTime.now().toString().replaceAll("[^\\d]","");
 
         String selenoidURL = "http://localhost:4444/wd/hub";
         DesiredCapabilities caps = new DesiredCapabilities();
@@ -59,7 +61,7 @@ public class BaseHooks {
         }
     }
 
-    //@BeforeEach
+    @BeforeEach
     public void setUpLocal() {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
@@ -68,6 +70,12 @@ public class BaseHooks {
             //driver.manage().window().maximize();
             driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
         }
+    }
+
+    @BeforeEach
+    public void loadConfig() throws Throwable {
+        SuiteConfiguration config = new SuiteConfiguration();
+        baseUrl = config.getProperty("site.url");
     }
 
     @AfterEach
@@ -84,7 +92,7 @@ public class BaseHooks {
         aria.click();
     }
 
-    @Step("Получение списка дат из строкового значения {value}")
+    @Step("Получение списка дат из строкового значения - '{value}'")
     public ArrayList<Date> collectDates(String value) throws ParseException {
         ArrayList<Date> dates = new ArrayList<>();
 

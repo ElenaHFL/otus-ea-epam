@@ -38,15 +38,17 @@ public class HomePage extends AbstractPage {
         super(driver);
     }
 
-    @Step("Открытие страницы {baseUrl}")
+    @Step("Открытие страницы - '{baseUrl}'")
     public void open(String baseUrl) {
         driver.get(baseUrl);
+        waitForPageLoaded();
         Allure.addAttachment("Главная страница EPAM", new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES)));
     }
 
     @Step("Переход на домашнюю страницу через клик по логотипу")
     public HomePage openHomeByTab() {
         waitForElement(homeLink).click();
+        waitForPageLoaded();
         Allure.addAttachment("Домашняя страница EPAM", new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES)));
         return this;
     }
@@ -54,6 +56,7 @@ public class HomePage extends AbstractPage {
     @Step("Переход по ссылке Upcoming Events на вкладку Events")
     public EventsPage openEventsByLink() {
         waitForElement(upcomingEventsLink).click();
+        waitForPageLoaded();
         Allure.addAttachment("Вкладка Events", new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES)));
         return new EventsPage(driver);
     }
@@ -61,6 +64,7 @@ public class HomePage extends AbstractPage {
     @Step("Переход на вкладку Events")
     public EventsPage openEventsByTab() {
         waitForElement(eventsLink).click();
+        waitForPageLoaded();
         Allure.addAttachment("Вкладка Events", new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES)));
         return new EventsPage(driver);
     }
@@ -68,6 +72,7 @@ public class HomePage extends AbstractPage {
     @Step("Переход на вкладку Video")
     public VideoPage openVideoByTab() {
         waitForElement(videoLink).click();
+        waitForPageLoaded();
         Allure.addAttachment("Вкладка Video", new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES)));
         return new VideoPage(driver);
     }

@@ -1,13 +1,12 @@
 package pages;
 
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.FindBys;
 
+import java.io.ByteArrayInputStream;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -111,6 +110,8 @@ public class EventsPage extends AbstractPage {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].scrollIntoView();", element);
         element.click();
+        waitForPageLoaded();
+        Allure.addAttachment("Карточка мероприятия", new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES)));
         return new EventDetailedPage(driver);
     }
 }
