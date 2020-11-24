@@ -3,7 +3,6 @@ package pages;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.FindBys;
 
@@ -57,21 +56,6 @@ public class VideoPage extends AbstractPage {
             Thread.sleep(500);
         }
         Allure.addAttachment("Поиск", new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES)));
-    }
-
-    @Step("Установка в фильтре значения - '{value}'")
-    public void setFilterWithScroll(WebElement aria, String value) {
-        WebElement element = aria.findElement(By.xpath("..//label[@data-value='" + value + "']"));
-
-        // Раскрываем фильтр
-        aria.click();
-        // На случай если есть скролл в списке значени
-        Actions builder = new Actions(driver);
-        builder.moveToElement(element).perform();
-        element.click();
-
-        // Закрываем фильтр
-        aria.click();
     }
 
     /**

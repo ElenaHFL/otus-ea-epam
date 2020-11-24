@@ -6,7 +6,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -35,7 +34,7 @@ public class BaseHooks {
     protected static String baseUrl;
 
     //@BeforeEach
-    public void setUp(TestInfo testInfo) throws MalformedURLException {
+    public void setUpRemote(TestInfo testInfo) throws MalformedURLException {
 
         // Получили название теста
         String testName = String.valueOf(testInfo.getDisplayName());
@@ -83,13 +82,6 @@ public class BaseHooks {
         if (driver != null) {
             driver.quit();
         }
-    }
-
-    public void setFilter(WebElement aria, WebElement element) {
-        // Раскрываем фильтр
-        aria.click();
-        element.click();
-        aria.click();
     }
 
     @Step("Получение списка дат из строкового значения - '{value}'")

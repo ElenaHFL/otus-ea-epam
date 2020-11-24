@@ -180,6 +180,7 @@ public class EventsPageTest extends BaseHooks {
 
         // Пользователь нажимает на Past Events
         eventPage.pastEventsLink.click();
+        eventPage.waitForPageLoaded();
 
         // Пользователь нажимает на Location в блоке фильтров и выбирает Canada в выпадающем списке
         eventPage.setFilter(eventPage.locationFilter, country);

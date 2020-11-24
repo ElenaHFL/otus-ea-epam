@@ -3,6 +3,7 @@ package pages;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.PageFactory;
@@ -62,15 +63,33 @@ public abstract class AbstractPage extends BaseHooks {
      */
     public void waitForPageLoaded() {
        new WebDriverWait(driver, 5, 100)
-               .until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("div.evnt-loader")));
+               .until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("div.evnt-global-loader")));
+    }
+
+    /**
+     * Функция нажатия кнопки ESCAPE
+     */
+    public void clickEscape() {
+        driver.findElement(By.tagName("body")).sendKeys(Keys.chord(Keys.ESCAPE));
+    }
+
+    /**
+     * Дефолтный вызов метода setFilter, без скролла
+     */
+    public void setFilter(WebElement aria, String value) {
+        setFilter(aria, value, false );
     }
 
     @Step("Установка в фильтре значения - '{value}'")
-    public void setFilter(WebElement aria, String value) {
-        // Раскрываем фильтр
+    public void setFilter(WebElement aria, String value, Boolean needScroll) {
         WebElement element = aria.findElement(By.xpath("..//label[@data-value='" + value + "']"));
-        setFilter(aria, element);
+        // Раскрываем фильтр
+        aria.click();
+        // На случай если есть скролл в списке значений
+        if (needScroll) new Actions(driver).moveToElement(element).perform();
+        element.click();
+        // Закрываем фильтр через ESC
+        clickEscape();
         Allure.addAttachment("Фильтр", new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES)));
     }
-
 }

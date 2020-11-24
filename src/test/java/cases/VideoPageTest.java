@@ -54,7 +54,7 @@ public class VideoPageTest extends BaseHooks {
         // Пользователь выбирает: Category – Testing, Location – Belarus, Language – English, На развернутой вкладке фильтров
         videoPage.setFilter(videoPage.locationFilter, country);
         videoPage.setFilter(videoPage.languageFilter, speech);
-        videoPage.setFilterWithScroll(videoPage.categoryFilter, category);
+        videoPage.setFilter(videoPage.categoryFilter, category, true);
 
         // На странице отображаются карточки соответствующие правилам выбранных фильтров
         // Пробежимся по страницам с детальной информацией отображающихся записей
