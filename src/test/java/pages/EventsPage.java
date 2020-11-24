@@ -25,11 +25,11 @@ public class EventsPage extends AbstractPage {
     /** Тег с данными о языке */
     public String languagePath = "p[@class='language']";
     /** Тег с данными о названии */
-    public String namePath = "div[@class='evnt-event-name']//span";
+    public String namePath = "div[@class='evnt-event-name']";
     /** Тег с данными о дате */
-    public String datePath = "div[@class='evnt-event-dates']//span[@class='date']";
+    public String datePath = "div[@class='evnt-event-dates']/descendant::span[@class='date']";
     /** Тег с данными о статусе */
-    public String statusPath = "span[contains(@class,'status')]";
+    public String statusPath = "div[@class='evnt-event-dates']/descendant::span[contains(@class,'status')]";
     /** Тег с данными о выступающих */
     public String speakersPath = "div[@class='evnt-speaker'][@data-name]";
 
@@ -85,9 +85,10 @@ public class EventsPage extends AbstractPage {
      * @return true/false
      */
     public boolean isFollowing(WebElement from, String value) {
+        // собираем все элементы в документе после закрытия тэга текущего узла
         return from.findElements(By.xpath("./following::" + value)).stream()
-                .filter(item -> item.findElements(By.xpath("./ancestor::div[contains(@class,'evnt-cards-container')]/preceding-sibling::div[contains(@class,'evnt-cards-container')]")).size() == 0)
-                .filter(item -> item.findElements(By.xpath("./ancestor::div[contains(@class,'evnt-events-column')]/preceding-sibling::div[contains(@class,'evnt-events-column')]")).size() == 0)
+                // оставляем только те, что относятся к первой карточке
+                .filter(item -> item.findElements(By.xpath("./ancestor::div[contains(@class,'evnt-cards-container') or contains(@class,'evnt-events-column')]/preceding-sibling::node()")).size() == 0)
                 .collect(Collectors.toList()).size() != 0;
     }
 
