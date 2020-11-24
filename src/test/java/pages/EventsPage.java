@@ -11,7 +11,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.lang.Integer.parseInt;
 
@@ -27,9 +26,9 @@ public class EventsPage extends AbstractPage {
     /** Тег с данными о названии */
     public String namePath = "div[@class='evnt-event-name']";
     /** Тег с данными о дате */
-    public String datePath = "div[@class='evnt-event-dates']/descendant::span[@class='date']";
+    public String datePath = "span[@class='date']";
     /** Тег с данными о статусе */
-    public String statusPath = "div[@class='evnt-event-dates']/descendant::span[contains(@class,'status')]";
+    public String statusPath = "span[contains(@class,'status') and contains(@class,'free-attend')]";
     /** Тег с данными о выступающих */
     public String speakersPath = "div[@class='evnt-speaker'][@data-name]";
 
@@ -85,11 +84,14 @@ public class EventsPage extends AbstractPage {
      * @return true/false
      */
     public boolean isFollowing(WebElement from, String value) {
+        List<WebElement> elements = new ArrayList<>();
         // собираем все элементы в документе после закрытия тэга текущего узла
-        return from.findElements(By.xpath("./following::" + value)).stream()
+        from.findElements(By.xpath("./following::" + value)).stream()
                 // оставляем только те, что относятся к первой карточке
                 .filter(item -> item.findElements(By.xpath("./ancestor::div[contains(@class,'evnt-cards-container') or contains(@class,'evnt-events-column')]/preceding-sibling::node()")).size() == 0)
-                .collect(Collectors.toList()).size() != 0;
+                .findFirst().ifPresent(elements :: add);
+
+        return elements.size() != 0;
     }
 
     /**
