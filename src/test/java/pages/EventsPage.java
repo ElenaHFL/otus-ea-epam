@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.lang.Integer.parseInt;
 
@@ -20,6 +21,8 @@ import static java.lang.Integer.parseInt;
 public class EventsPage extends AbstractPage {
 
     /** Тег с данными о языке */
+    public String placePath = "p[@class='online']";
+    /** Тег с данными о языке */
     public String languagePath = "p[@class='language']";
     /** Тег с данными о названии */
     public String namePath = "div[@class='evnt-event-name']//span";
@@ -28,11 +31,7 @@ public class EventsPage extends AbstractPage {
     /** Тег с данными о статусе */
     public String statusPath = "span[contains(@class,'status')]";
     /** Тег с данными о выступающих */
-    public String speakersPath = "div[@class='evnt-speaker'][data-name]";
-
-    /** Данные о месте проведения */
-    @FindBy(css = "div.tab-content div.evnt-events-column p.online")
-    public WebElement placeField;
+    public String speakersPath = "div[@class='evnt-speaker'][@data-name]";
 
     /** Список дополнительных выступающих */
     @FindBy(css = "div.tab-content div.evnt-events-column div.evnt-speaker.more span")
@@ -70,13 +69,26 @@ public class EventsPage extends AbstractPage {
     }
 
     /**
-     * Функция поиска веб-элементов, следующих за указанным в параметре
+     * Функция поиска потомков переданного в параметре веб-элемента
      * @param from - точка отсчета для поиска
      * @param value - часть локатора для поиска
      * @return список веб-элементов
      */
-    public List<WebElement> getFollowingElements(WebElement from, String value) {
-        return from.findElements(By.xpath("//following::" + value));
+    public List<WebElement> getElements(WebElement from, String value) {
+        return from.findElements(By.xpath("./descendant::" + value));
+    }
+
+    /**
+     * Функция проверки расположения элементов
+     * @param from - точка отсчета для поиска
+     * @param value - часть локатора для поиска
+     * @return true/false
+     */
+    public boolean isFollowing(WebElement from, String value) {
+        return from.findElements(By.xpath("./following::" + value)).stream()
+                .filter(item -> item.findElements(By.xpath("./ancestor::div[contains(@class,'evnt-cards-container')]/preceding-sibling::div[contains(@class,'evnt-cards-container')]")).size() == 0)
+                .filter(item -> item.findElements(By.xpath("./ancestor::div[contains(@class,'evnt-events-column')]/preceding-sibling::div[contains(@class,'evnt-events-column')]")).size() == 0)
+                .collect(Collectors.toList()).size() != 0;
     }
 
     /**

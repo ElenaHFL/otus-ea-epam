@@ -18,7 +18,6 @@ import pages.VideoPage;
 import utils.BaseHooks;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -58,18 +57,13 @@ public class VideoPageTest extends BaseHooks {
         videoPage.setFilterWithScroll(videoPage.categoryFilter, category);
 
         // На странице отображаются карточки соответствующие правилам выбранных фильтров
-        List<WebElement> talkNameList = videoPage.talkСardNameList;
-        ArrayList<String> urls = new ArrayList<>();
-        for (WebElement talkName : talkNameList){
-            urls.add(videoPage.getLinkFromElement(talkName));
-        }
-
-        for (String url : urls) {
+        // Пробежимся по страницам с детальной информацией отображающихся записей
+        for (String url : videoPage.getUrlList()) {
             // Переходим на страницу с деталями записи
-            driver.get(url);
+            homePage.open(url);
 
             // Получаем информацию о записи
-            String language = videoDetailedPage.language.getText();
+            String language = videoDetailedPage.waitForElement(videoDetailedPage.language).getText();
             String location = videoDetailedPage.location.getText();
             String categories = videoDetailedPage.getTopics();
 
@@ -103,11 +97,10 @@ public class VideoPageTest extends BaseHooks {
         videoPage.setSearch(word);
 
         // На странице отображаются доклады, содержащие в названии ключевое слово поиска
-        List<WebElement> talkNameList = videoPage.talkСardNameList;
         ArrayList<String> urls = new ArrayList<>();
 
         // Проверяем доклады на соотв. условиям поиска
-        for (WebElement talkName : talkNameList){
+        for (WebElement talkName : videoPage.talkСardNameList){
             String name = talkName.getText();
             if (name.contains(word)){
                 logger.info(String.format("Доклад с названием '%s' содержит слово '%s'", name, word));
@@ -120,7 +113,7 @@ public class VideoPageTest extends BaseHooks {
         // Проверяем детальные карточки докладов, у которых на свернутой форме не было обнаружено ключевое слово поиска
         for (String url : urls) {
             // Переходим на страницу с деталями записи
-            driver.get(url);
+            homePage.open(url);
 
             // Получаем информации о названии
             String title = videoDetailedPage.title.getText();

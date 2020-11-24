@@ -10,6 +10,8 @@ import org.openqa.selenium.support.FindBys;
 import java.io.ByteArrayInputStream;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 /**
  * Класс описывающий страницу с видео материалами о выступлениях
  */
@@ -70,6 +72,16 @@ public class VideoPage extends AbstractPage {
 
         // Закрываем фильтр
         aria.click();
+    }
+
+    /**
+     * Функция получения списка url-ов список выступлений
+     * @return возвращает список ссылок на детальную информацию страниц выступлений
+     */
+    public List<String> getUrlList() {
+        return talkСardNameList.stream()
+                        .map(item -> getLinkFromElement(item))
+                        .collect(toList());
     }
 
 }

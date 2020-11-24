@@ -12,7 +12,9 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pages.*;
+import pages.EventDetailedPage;
+import pages.EventsPage;
+import pages.HomePage;
 import utils.BaseHooks;
 
 import java.text.ParseException;
@@ -80,13 +82,14 @@ public class EventsPageTest extends BaseHooks {
             // • место проведения, язык
             // • название мероприятия, дата мероприятия, информация о регистрации
             // • список спикеров
-            // TODO: подумать как разделить проверку, порядок отдельно, наличие элементов отдельно
-            WebElement place = eventPage.placeField;
-            WebElement language = eventPage.getFollowingElements(place, eventPage.languagePath).get(0);
-            WebElement name = eventPage.getFollowingElements(language, eventPage.namePath).get(0);
-            WebElement date = eventPage.getFollowingElements(name, eventPage.datePath).get(0);
-            WebElement status = eventPage.getFollowingElements(date, eventPage.statusPath).get(0);
-            List<WebElement> speakers = eventPage.getFollowingElements(status, eventPage.speakersPath);
+            WebElement card = eventPage.eventsByCardList.get(0);
+
+            WebElement place = eventPage.getElements(card, eventPage.placePath).get(0);
+            WebElement language = eventPage.getElements(card, eventPage.languagePath).get(0);
+            WebElement name = eventPage.getElements(card, eventPage.namePath).get(0);
+            WebElement date = eventPage.getElements(card, eventPage.datePath).get(0);
+            WebElement status = eventPage.getElements(card, eventPage.statusPath).get(0);
+            List<WebElement> speakers = eventPage.getElements(card, eventPage.speakersPath);
             Integer speaker = eventPage.getSpeakersCount(speakers);
 
             logger.info(new StringBuilder()
@@ -97,6 +100,20 @@ public class EventsPageTest extends BaseHooks {
                     .append("\nРегистрация = " + status.getText())
                     .append("\nВсего спикеров = " + speaker)
                     .toString());
+
+            assertTrue(place.isDisplayed(), "Место проведения НЕ отображается на карточке");
+            assertTrue(language.isDisplayed(), "Язык НЕ отображается на карточке");
+            assertTrue(name.isDisplayed(), "Название мероприятия НЕ отображается на карточке");
+            assertTrue(date.isDisplayed(), "Дата мероприятия НЕ отображается на карточке");
+            assertTrue(status.isDisplayed(), "Информация о регистрации НЕ отображается на карточке");
+            assertTrue(speakers.get(0).isDisplayed(), "Список спикеров НЕ отображается на карточке");
+
+            assertTrue(eventPage.isFollowing(place, eventPage.languagePath), "Информации о языке НЕ расположена ниже места проведения");
+            assertTrue(eventPage.isFollowing(language, eventPage.namePath), "Информации о названии НЕ расположена ниже информации о языке");
+            assertTrue(eventPage.isFollowing(name, eventPage.datePath), "Информации о дате НЕ расположена ниже информации о названии");
+            assertTrue(eventPage.isFollowing(date, eventPage.statusPath), "Информации о регистрации НЕ расположена ниже информации о дате");
+            assertTrue(eventPage.isFollowing(status, eventPage.speakersPath), "Информации о спикерах НЕ расположена ниже информации о регистрации");
+
         } else {
             logger.warn("На странице нет ни одной карточки предстоящих мероприятий");
         }
