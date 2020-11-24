@@ -8,10 +8,13 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.BaseHooks;
 
 import java.io.ByteArrayInputStream;
+import java.time.Duration;
 
 /**
  * Abstract class representation of a Page in the UI. Page object pattern
@@ -40,6 +43,9 @@ public abstract class AbstractPage extends BaseHooks {
     @FindBy(id = "filter_category")
     public WebElement categoryFilter;
 
+    /** Индикатор загрузки */
+    public By loader = By.cssSelector("div.evnt-loader");
+
     /**
      * Конструктор - создание нового объекта
      */
@@ -62,8 +68,11 @@ public abstract class AbstractPage extends BaseHooks {
      * @return веб-элемент
      */
     public void waitForPageLoaded() {
-       new WebDriverWait(driver, 5, 100)
-               .until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("div.evnt-global-loader")));
+        Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
+                .withTimeout(Duration.ofSeconds(10))
+                .pollingEvery(Duration.ofMillis(100))
+                .ignoring(NoSuchElementException.class);
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(loader));
     }
 
     /**

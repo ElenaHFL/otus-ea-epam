@@ -56,7 +56,7 @@ public class BaseHooks {
 
         if (driver != null) {
             driver.manage().window().maximize();
-            driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
         }
     }
 
@@ -64,10 +64,12 @@ public class BaseHooks {
     public void setUpLocal() {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
+        /*WebDriverManager.firefoxdriver().setup();
+        driver = new FirefoxDriver();*/
 
         if (driver != null) {
             //driver.manage().window().maximize();
-            driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
         }
     }
 
