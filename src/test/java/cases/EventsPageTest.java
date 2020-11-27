@@ -139,22 +139,18 @@ public class EventsPageTest extends BaseHooks {
         // В блоке This week даты проведения мероприятий больше или равны текущей дате и находятся в пределах текущей недели
         // Если блока This week нет, сравним все что есть
         List<WebElement> cards = eventPage.eventsWeekByCardList.size() == 0 ? eventPage.eventsByCardList : eventPage.eventsWeekByCardList;
-        if (cards.size() > 0) {
+        if (cards.size() == 0) logger.warn("На странице нет ни одной карточки прошедших мероприятий");
 
-            Date today = new Date();
-            ArrayList<Date> dates;
+        Date today = new Date();
+        ArrayList<Date> dates;
 
-            for(WebElement card : cards) {
-                dates = eventPage.getEventDates(card);
-                logger.info(String.format("Проверка дат: %s должна быть больше текущей %s", dates, today));
+        for(WebElement card : cards) {
+            dates = eventPage.getEventDates(card);
+            logger.info(String.format("Проверка дат: %s должна быть больше текущей %s", dates, today));
 
-                for (Date dt : dates) {
-                    assertTrue(dt.compareTo(today) > 0, "Дата предстоящего события меньше текущей");
-                }
+            for (Date dt : eventPage.getEventDates(card)) {
+                assertTrue(dt.compareTo(today) > 0, "Дата предстоящего события меньше текущей");
             }
-
-        } else {
-            logger.warn("На странице нет ни одной карточки предстоящих мероприятий");
         }
     }
 
@@ -199,22 +195,18 @@ public class EventsPageTest extends BaseHooks {
         // Даты проведенных мероприятий меньше текущей даты
         // На странице отображаются карточки предстоящих мероприятий
         List<WebElement> cards = eventPage.eventsByCardList;
-        if (cards.size() > 0) {
+        if (cards.size() == 0) logger.warn("На странице нет ни одной карточки прошедших мероприятий");
 
-            Date today = new Date();
-            ArrayList<Date> dates;
+        Date today = new Date();
+        ArrayList<Date> dates;
 
-            for(WebElement card : cards) {
-                dates = eventPage.getEventDates(card);
-                logger.info(String.format("Проверка дат: %s должны быть меньше текущей %s", dates, today));
+        for(WebElement card : cards) {
+            dates = eventPage.getEventDates(card);
+            logger.info(String.format("Проверка дат: %s должны быть меньше текущей %s", dates, today));
 
-                for (Date dt : dates) {
-                    assertTrue(dt.compareTo(today) < 0,"Дата прошедшего события БОЛЬШЕ текущей");
-                }
+            for (Date dt : dates) {
+                assertTrue(dt.compareTo(today) < 0,"Дата прошедшего события БОЛЬШЕ текущей");
             }
-
-        } else {
-            logger.warn("На странице нет ни одной карточки прошедших мероприятий");
         }
     }
 

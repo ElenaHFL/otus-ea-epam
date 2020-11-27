@@ -1,12 +1,10 @@
 package utils;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -62,10 +60,12 @@ public class BaseHooks {
 
     @BeforeEach
     public void setUpLocal() {
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-        /*WebDriverManager.firefoxdriver().setup();
-        driver = new FirefoxDriver();*/
+        // При локальном запуске указать в параметре: -Dbrowser=...
+        // По умолчанию запуск на chrome
+        String browser = System.getProperty("browser");
+        String options = System.getProperty("options");
+
+        driver = WebDriverFactory.create(browser, options);
 
         if (driver != null) {
             //driver.manage().window().maximize();

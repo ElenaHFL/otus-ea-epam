@@ -112,7 +112,7 @@ public class EventsPage extends AbstractPage {
         Integer сount = webElementList.size();
         // Могут быть дополнительные спикеры (добавим их если есть)
         List<WebElement> speakerMore = speakerMoreField;
-        if (speakerMore != null) {
+        if (speakerMore.size() > 0) {
             String more = speakerMore.get(0).getText();
             сount = сount + parseInt(more.replace("+", ""));
         }
@@ -129,4 +129,5 @@ public class EventsPage extends AbstractPage {
         Allure.addAttachment("Карточка мероприятия", new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES)));
         return new EventDetailedPage(driver);
     }
+
 }
